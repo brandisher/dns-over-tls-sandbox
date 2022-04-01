@@ -59,6 +59,30 @@ objects:
           path: server-cert.pem
         name: ${NAME}
       name: config-volume
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: openssl-client
+  spec:
+    volumes:
+    - configMap:
+        defaultMode: 420
+        items:
+        - key: ca-cert.pem
+          path: ca-cert.pem
+        name: ${NAME}
+      name: config-volume
+    containers:
+    - name: openssl
+      image: ${CLI}
+      args:
+      - sleep
+      - "1000000"
+      volumeMounts:
+      - mountPath: /tmp
+        name: config-volume
+        readOnly: true
 parameters:
 - name: NAME
 - name: IMAGE
+- name: CLI
