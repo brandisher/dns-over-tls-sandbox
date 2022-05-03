@@ -74,7 +74,7 @@ objects:
       name: config-volume
     containers:
     - name: openssl
-      image: ${CLI}
+      image: quay.io/cscribne/openssl-client:latest
       args:
       - sleep
       - "1000000"
