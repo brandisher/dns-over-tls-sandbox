@@ -53,8 +53,8 @@ objects:
         items:
         - key: Corefile
           path: Corefile
-        - key: server-key.pem
-          path: server-key.pem
+        - key: server.key
+          path: server.key
         - key: server-cert.pem
           path: server-cert.pem
         name: ${NAME}

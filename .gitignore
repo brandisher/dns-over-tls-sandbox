@@ -1,2 +1,4 @@
 Corefile
 *.pem
+*.csr
+*.key
