@@ -11,5 +11,10 @@ Running `./setup.sh` will...
 3. Create the upstream service and upstream pod. This uses the Template type to ensure that everything we pass in is consistent.
 
 ## Testing
+
+To validate that the upstream resolver is running with TLS enabled, do the following:
 1. `oc rsh openssl-client`
 2. `openssl s_client -connect upstream-tls:5353 -servername upstream-tls`
+
+Optionally, you can pass `-CAfile /tmp/ca-cert.pem` to validate that the server cert of the upstream was signed by 
+the CA cert on the client.
