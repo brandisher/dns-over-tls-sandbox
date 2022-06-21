@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Template
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: upstream-tls-service-ca
+    annotations:
+      service.beta.openshift.io/serving-cert-secret-name: upstream-tls-service-ca
+    namespace: ${NAME}
+  spec:
+    ports:
+    - name: 5353-5353
+      port: 5555
+      protocol: TCP
+      targetPort: 5353
+    selector:
+      app: upstream-tls-service-ca
+    type: ClusterIP
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: upstream-tls-service-ca-corefile
+    namespace: ${NAME}
+    labels:
+      app: upstream-tls-service-ca
+  data:
+    Corefile: |
+      tls://.:5353 {
+        hosts {
+          1.2.3.4 www.foo.com
+        }
+        tls /tmp/tls/server-cert.pem /tmp/tls/server-key.pem
+        health
+        errors
+        log
+        reload
+      }
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: upstream-tls-service-ca
+    namespace: ${NAME}
+    labels:
+      app: upstream-tls-service-ca
+  spec:
+    containers:
+    - args:
+      - -conf
+      - /etc/coredns/Corefile
+      command:
+      - coredns
+      image: ${IMAGE}
+      name: dns
+      ports:
+      - containerPort: 5353
+        name: dns
+        protocol: UDP
+      - containerPort: 5353
+        name: dns-tcp
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 50m
+          memory: 70Mi
+      volumeMounts:
+      - mountPath: /etc/coredns
+        name: config-volume
+        readOnly: true
+      - mountPath: /tmp/tls
+        name: tls-volume
+        readOnly: true
+    dnsPolicy: Default
+    volumes:
+    - configMap:
+        defaultMode: 420
+        items:
+        - key: Corefile
+          path: Corefile
+        name: upstream-tls-service-ca-corefile
+      name: config-volume
+    - secret:
+        defaultMode: 420
+        items:
+          - key: tls.crt
+            path: server-cert.pem
+          - key: tls.key
+            path: server-key.pem
+        secretName: upstream-tls-service-ca
+        optional: false
+      name: tls-volume
+parameters:
+- name: NAME
+- name: IMAGE
+- name: CLI

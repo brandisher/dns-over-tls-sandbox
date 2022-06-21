@@ -44,3 +44,4 @@ oc create namespace $UPSTREAM
 oc project $UPSTREAM
 oc create configmap "$UPSTREAM" --from-file="Corefile" --from-file=$SERVERCERT --from-file=$SERVERKEY --from-file=$CACERT
 oc process -f upstream.yaml NAME=$UPSTREAM IMAGE=$COREDNS_IMAGE CLI=$OC_IMAGE --local | oc apply -f -
+oc process -f upstream-service-ca.yaml NAME=$UPSTREAM IMAGE=$COREDNS_IMAGE CLI=$OC_IMAGE --local | oc apply -f -
