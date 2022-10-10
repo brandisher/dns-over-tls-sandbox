@@ -46,6 +46,14 @@ objects:
       - mountPath: /etc/coredns
         name: config-volume
         readOnly: true
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
     dnsPolicy: Default
     volumes:
     - configMap:
@@ -82,6 +90,14 @@ objects:
       - mountPath: /tmp
         name: config-volume
         readOnly: true
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
 parameters:
 - name: NAME
 - name: IMAGE

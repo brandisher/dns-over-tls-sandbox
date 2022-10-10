@@ -10,6 +10,9 @@ Running `./setup.sh` will...
 2. Create the Configmap that holds the Corefile, server-cert.pem, server-key.pem, and ca-cert.pem values
 3. Create the upstream service and upstream pod. This uses the Template type to ensure that everything we pass in is consistent.
 
+This script will also create a service signed by the service-signer on the cluster that can be used to simulate connecting
+to a third party DNS resolver.
+
 ## Testing
 
 To validate that the upstream resolver is running with TLS enabled, do the following:

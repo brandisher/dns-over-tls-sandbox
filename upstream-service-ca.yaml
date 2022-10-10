@@ -70,6 +70,14 @@ objects:
       - mountPath: /tmp/tls
         name: tls-volume
         readOnly: true
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
     dnsPolicy: Default
     volumes:
     - configMap:

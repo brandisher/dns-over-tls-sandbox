@@ -40,9 +40,8 @@ tls://.:$PODDNSPORT {
 }
 EOF
 
-oc create namespace $UPSTREAM
+oc process -f namespace.yaml NAME=$UPSTREAM --local | oc apply -f -
 oc project $UPSTREAM
-oc label ns/$UPSTREAM security.openshift.io/scc.podSecurityLabelSync=false security.kubernetes.io/enforce=privileged security.kubernetes.io/warn=privileged security.kubernetes.io/audit=privileged
 oc create configmap "$UPSTREAM" --from-file="Corefile" --from-file=$SERVERCERT --from-file=$SERVERKEY --from-file=$CACERT
 oc process -f upstream.yaml NAME=$UPSTREAM IMAGE=$COREDNS_IMAGE CLI=$OC_IMAGE --local | oc apply -f -
 oc process -f upstream-service-ca.yaml NAME=$UPSTREAM IMAGE=$COREDNS_IMAGE CLI=$OC_IMAGE --local | oc apply -f -
